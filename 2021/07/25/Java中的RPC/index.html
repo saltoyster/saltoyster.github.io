@@ -20,19 +20,21 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+  <meta name="description" content="Java中的RPC什么是RPCRPC是远程过程调用的简称，广泛应用在大规模分布式应用中，作用是有助于系统的垂直拆分，使系统更易拓展。Java中的RPC框架比较多，各有特色，广泛使用的有RMI、Hessian、Dubbo等。 RPC 的全称是 Remote Procedure Call 是一种进程间通信方式。它允许程序调用另一个地址空间（通常是共享网络的另一台机器上）的过程或函数，而不用程序员显式编">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="http://example.com/2021/05/23/hello-world/index.html">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2021/07/25/Java%E4%B8%AD%E7%9A%84RPC/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta property="og:description" content="Java中的RPC什么是RPCRPC是远程过程调用的简称，广泛应用在大规模分布式应用中，作用是有助于系统的垂直拆分，使系统更易拓展。Java中的RPC框架比较多，各有特色，广泛使用的有RMI、Hessian、Dubbo等。 RPC 的全称是 Remote Procedure Call 是一种进程间通信方式。它允许程序调用另一个地址空间（通常是共享网络的另一台机器上）的过程或函数，而不用程序员显式编">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-05-23T14:51:02.481Z">
-<meta property="article:modified_time" content="2021-05-23T14:51:02.481Z">
+<meta property="og:image" content="http://example.com/.com//hexo/hexodemo/pic/20190511091751847.png">
+<meta property="article:published_time" content="2021-07-25T09:06:22.282Z">
+<meta property="article:modified_time" content="2021-07-28T09:49:22.556Z">
 <meta property="article:author" content="Zyh">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/.com//hexo/hexodemo/pic/20190511091751847.png">
 
-<link rel="canonical" href="http://example.com/2021/05/23/hello-world/">
+<link rel="canonical" href="http://example.com/2021/07/25/Java%E4%B8%AD%E7%9A%84RPC/">
 
 
 <script id="page-configurations">
@@ -45,7 +47,7 @@
   };
 </script>
 
-  <title>Hello World | Hexo</title>
+  <title> | Hexo</title>
   
 
 
@@ -160,7 +162,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/05/23/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/25/Java%E4%B8%AD%E7%9A%84RPC/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -173,7 +175,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Hello World
+          
         </h1>
 
         <div class="post-meta">
@@ -183,8 +185,15 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2021-05-23 22:51:02" itemprop="dateCreated datePublished" datetime="2021-05-23T22:51:02+08:00">2021-05-23</time>
+              <time title="创建时间：2021-07-25 17:06:22" itemprop="dateCreated datePublished" datetime="2021-07-25T17:06:22+08:00">2021-07-25</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-07-28 17:49:22" itemprop="dateModified" datetime="2021-07-28T17:49:22+08:00">2021-07-28</time>
+              </span>
 
           
 
@@ -197,20 +206,18 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-
+        <h1 id="Java中的RPC"><a href="#Java中的RPC" class="headerlink" title="Java中的RPC"></a>Java中的RPC</h1><h3 id="什么是RPC"><a href="#什么是RPC" class="headerlink" title="什么是RPC"></a>什么是RPC</h3><p><strong>RPC</strong>是远程过程调用的简称，广泛应用在大规模分布式应用中，作用是有助于系统的垂直拆分，使系统更易拓展。Java中的RPC框架比较多，各有特色，广泛使用的有RMI、Hessian、Dubbo等。</p>
+<p>RPC 的全称是 Remote Procedure Call 是一种进程间通信方式。它允许程序调用另一个地址空间（通常是共享网络的另一台机器上）的过程或函数，而<strong>不用程序员显式编码这个远程调用的细节</strong>。即无论是调用本地接口/服务的还是远程的接口/服务，本质上编写的调用代码基本相同。</p>
+<p>  RPC 会隐藏底层的通讯细节（不需要直接处理Socket通讯或Http通讯）</p>
+<p>  RPC 是一个请求响应模型。客户端发起请求，服务器返回响应（类似于Http的工作方式）</p>
+<p>  RPC 在使用形式上像调用本地函数（或方法）一样去调用远程的函数（或方法）。</p>
+<h3 id="RPC框架实现原理"><a href="#RPC框架实现原理" class="headerlink" title="RPC框架实现原理"></a>RPC框架实现原理</h3><p>在RPC框架中主要有三个角色：Provider、Consumer和Registry。</p>
+<p><img src="/.com//hexo\hexodemo\pic\20190511091751847.png" alt="20190511091751847"></p>
+<h3 id="RestFul和RPC的区别"><a href="#RestFul和RPC的区别" class="headerlink" title="RestFul和RPC的区别"></a>RestFul和RPC的区别</h3><p>1、从本质区别上看，RPC是基于TCP实现的，RESTFUL是基于HTTP来实现的。</p>
+<p>2、从传输速度上来看，因为HTTP封装的数据量更多所以数据传输量更大，所以RPC的传输速度是比RESTFUL更快的。</p>
+<p>3、因为HTTP协议是各个框架都普遍支持的。在toC情况下，因为不知道情况来源的框架、数据形势是什么样的，所以在网关可以使用Restful利用http来接受。而在微服务内部的各模块之间因为各协议方案是公司内部自己定的，所以知道各种数据方式，可以使用TCP传输以使各模块之间的数据传输更快。所以可以网关和外界的数据传输使用RESTFUL，微服务内部的各模块之间使用RPC。</p>
+<p>4、RESTFUL的API的设计上是面向资源的，对于同一资源的获取、传输、修改可以使用GET、POST、PUT来对同一个URL进行区别，而RPC通常把动词直接体现在URL上</p>
+<h3 id><a href="#" class="headerlink" title></a></h3>
     </div>
 
     
@@ -224,10 +231,13 @@
 
         
     <div class="post-nav">
-      <div class="post-nav-item"></div>
       <div class="post-nav-item">
-    <a href="/2021/06/25/Springboot%E5%9F%BA%E6%9C%AC%E7%9A%84%E6%95%B0%E6%8D%AE%E6%A0%A1%E9%AA%8C%E4%BB%A5%E5%8F%8A%E8%A7%84%E8%8C%83%E6%8E%A5%E5%8F%A3%E5%BD%A2%E5%BC%8F/" rel="next" title="Springboot基本的数据校验以及规范接口形式">
-      Springboot基本的数据校验以及规范接口形式 <i class="fa fa-chevron-right"></i>
+    <a href="/2021/07/14/%E9%9D%A2%E7%BB%8F%E6%80%BB%E7%BB%93/" rel="prev" title="面经总结">
+      <i class="fa fa-chevron-left"></i> 面经总结
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/07/26/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" rel="next" title="">
+       <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -287,7 +297,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Quick-Start"><span class="nav-number">1.</span> <span class="nav-text">Quick Start</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Create-a-new-post"><span class="nav-number">1.1.</span> <span class="nav-text">Create a new post</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Run-server"><span class="nav-number">1.2.</span> <span class="nav-text">Run server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Generate-static-files"><span class="nav-number">1.3.</span> <span class="nav-text">Generate static files</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deploy-to-remote-sites"><span class="nav-number">1.4.</span> <span class="nav-text">Deploy to remote sites</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Java%E4%B8%AD%E7%9A%84RPC"><span class="nav-number">1.</span> <span class="nav-text">Java中的RPC</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFRPC"><span class="nav-number">1.0.1.</span> <span class="nav-text">什么是RPC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RPC%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86"><span class="nav-number">1.0.2.</span> <span class="nav-text">RPC框架实现原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RestFul%E5%92%8CRPC%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">1.0.3.</span> <span class="nav-text">RestFul和RPC的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.0.4.</span> <span class="nav-text"></span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -301,7 +311,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-count">6</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

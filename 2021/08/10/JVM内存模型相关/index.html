@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="JVM内存模型相关Java虚拟机在执行Java程序的过程中会把它管理的内存划分为若干个不同的数据区域。如图： 程序计数器程序计数器（Program Counter Register）是一块较小的内存空间，它可以看作是当前线程所执行的字节码的行号指示器。在Java虚拟机的概念模型里，字节码解释器的工作时就是通过改变这个计数器的值来选取下一条需要执行的字节码指令，它是程序控制流的指示器。 Java虚拟">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2021/08/10/JVM%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E7%9B%B8%E5%85%B3/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="JVM内存模型相关Java虚拟机在执行Java程序的过程中会把它管理的内存划分为若干个不同的数据区域。如图： 程序计数器程序计数器（Program Counter Register）是一块较小的内存空间，它可以看作是当前线程所执行的字节码的行号指示器。在Java虚拟机的概念模型里，字节码解释器的工作时就是通过改变这个计数器的值来选取下一条需要执行的字节码指令，它是程序控制流的指示器。 Java虚拟">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/.com//hexo/hexodemo/source/pic/类加载过程.png">
+<meta property="article:published_time" content="2021-08-10T08:53:46.005Z">
+<meta property="article:modified_time" content="2021-08-13T18:43:08.998Z">
+<meta property="article:author" content="Zyh">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/.com//hexo/hexodemo/source/pic/类加载过程.png">
+
+<link rel="canonical" href="http://example.com/2021/08/10/JVM%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E7%9B%B8%E5%85%B3/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title> | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hexo</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/10/JVM%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E7%9B%B8%E5%85%B3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Zyh">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-08-10 16:53:46" itemprop="dateCreated datePublished" datetime="2021-08-10T16:53:46+08:00">2021-08-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-08-14 02:43:08" itemprop="dateModified" datetime="2021-08-14T02:43:08+08:00">2021-08-14</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="JVM内存模型相关"><a href="#JVM内存模型相关" class="headerlink" title="JVM内存模型相关"></a>JVM内存模型相关</h1><p>Java虚拟机在执行Java程序的过程中会把它管理的内存划分为若干个不同的数据区域。如图：</p>
+<h3 id="程序计数器"><a href="#程序计数器" class="headerlink" title="程序计数器"></a>程序计数器</h3><p>程序计数器（Program Counter Register）是一块较小的内存空间，它可以看作是当前线程所执行的字节码的行号指示器。在Java虚拟机的概念模型里，字节码解释器的工作时就是通过改变这个计数器的值来选取下一条需要执行的字节码指令，它是程序控制流的指示器。</p>
+<h3 id="Java虚拟机栈"><a href="#Java虚拟机栈" class="headerlink" title="Java虚拟机栈"></a>Java虚拟机栈</h3><p>Java虚拟机栈（Java Virtual Machine Stack）也是线程私有的，它的生命周期和线程相同。每个方法被执行的时候，Java虚拟机都会同步创建一个栈帧（Stack Frame）用于存储局部变量，操作数栈，动态连接，方法出口等信息。每个方法都被调用直至执行完毕的过程，就对应一个栈帧在虚拟机中从入栈到出栈到过程。<br>通常所说的栈指的就是其中的局部变量表。局部变量表存放了编译期可知的各种Java虚拟机基本数据类型（boolean、nyte、char、short、int、float、long、double），对象引用和returnAddress类型（指向了一条字节码指令的地址）<br>对这个内存区域规定了两种异常处理情况：如果线程请求的栈深度大于虚拟机所允许的深度，将抛出StackOverflowError异常，如果Java虚拟机栈容量可以动态拓展，当栈扩展时无法申请到足够多的内存会抛出OutOfMemoryError异常。</p>
+<h3 id="本地方法栈"><a href="#本地方法栈" class="headerlink" title="本地方法栈"></a>本地方法栈</h3><p>本地方法栈（Native Method Stacks）与虚拟机栈发挥的作用非常相似，区别是虚拟机栈为虚拟机执行Java方法（也就是字节码）服务，而本地方法栈则是为虚拟机所使用的本地（Native）方法服务。</p>
+<h3 id="Java堆"><a href="#Java堆" class="headerlink" title="Java堆"></a>Java堆</h3><p>此内存区域的唯一作用就是存放对象实例，Java世界里几乎所有的对象实例都在这里分配内存。Java堆是垃圾收集器管理的内存区域，Java堆中经常会出现“新生代”，“老年代”，“永久代”，“Eden空间”，“From Surivor空间”，“To Survivor空间”等名词。</p>
+<h3 id="方法区"><a href="#方法区" class="headerlink" title="方法区"></a>方法区</h3><p>方法区（Method Area）和Java堆一样，是各个线程共享堆内存区域，它用于被虚拟机加载的类型信息，常量静态变量，即时编译后的代码缓存等数据。<br>这个区域的内存回收目标主要针对常量池的回收和堆类型的卸载。</p>
+<h3 id="Java类加载过程"><a href="#Java类加载过程" class="headerlink" title="Java类加载过程"></a>Java类加载过程</h3><h4 id="类加载的时机"><a href="#类加载的时机" class="headerlink" title="类加载的时机"></a>类加载的时机</h4><ul>
+<li>隐式加载new创建类的实例</li>
+<li>显式加载：loaderClass，forName等</li>
+<li>访问类的静态变量，或者为静态变量赋值</li>
+<li>调用类的静态变量，或者为静态变量赋值</li>
+<li>调用类的静态方法</li>
+<li>使用反射方式创建某个类或者接口对象的Class对象</li>
+<li>初始化某个类的子类</li>
+<li>直接使用java.exe命令来运行某个主类<h4 id="类加载过程"><a href="#类加载过程" class="headerlink" title="类加载过程"></a>类加载过程</h4>Java编译器将.java文件编译成扩展名为.class的文件。.class文件中保存着java转换后，虚拟机将要执行的指令。当需要某个类的时候，java虚拟机会加载.class文件并创建对应的class对象，将class文件加载到虚拟机的内存，整个加载过程为类的加载。</li>
+</ul>
+<p>​    <img src="/.com//hexo\hexodemo\source\pic\类加载过程.png" alt="类加载过程"></p>
+<p><strong>加载</strong></p>
+<p>类加载的一个阶段，Classloader通过一个类的完全限定名查找此类字节码文件，并利用字节码文件创建一个class对象。</p>
+<p><strong>验证</strong></p>
+<p>目的在于确保class文件的字节流中包含信息符合当前虚拟机要求，不会危害虚拟机自身安全，主要包括四种验证：文件格式的验证，元数据的验证，字节码验证，符号引用验证。</p>
+<p><strong>准备</strong></p>
+<p>为类变量（static修饰的字段变量）分配内存而且设置该变量的初始值，（如static int i = 5这里是将i赋值为0，在初始化阶段再将I赋值为5），这里不包括final修饰的static。因为final在编译的时候就已经分配了。这里不会为实例变量分配初始化，类变量会分配在方法中，实例变量会随着对象的分配到Java堆中。</p>
+<p><strong>解析</strong></p>
+<p>这里主要的任务是把常量池中的符号引用替换成直接引用。</p>
+<p><strong>初始化</strong></p>
+<p>这里是类记载的最后阶段，如果该类具有父类就进行对父类进行初始化，执行其静态初始化器（静态代码块）和静态初始化成员变量。（前面已经对static 初始化了默认值，这里我们对它进行赋值，成员变量也将被初始化）</p>
+<h3 id="内存泄漏"><a href="#内存泄漏" class="headerlink" title="内存泄漏"></a>内存泄漏</h3><h4 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h4><p>当本应该被释放或无用的对象，因为被其他存活的对象持有其引用，导致该对象不能被垃圾回收器回收，一直占用着内存，使程序运行变得缓慢甚至崩溃。</p>
+<h4 id="静态属性导致内存泄漏"><a href="#静态属性导致内存泄漏" class="headerlink" title="静态属性导致内存泄漏"></a>静态属性导致内存泄漏</h4><p>会导致内存泄露的一种情况就是大量使用static静态变量。在Java中，静态属性的生命周期通常伴随着应用整个生命周期（除非ClassLoader符合垃圾回收的条件）。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StaticTest</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> List&lt;Double&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">populateList</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10000000</span>; i++) &#123;</span><br><span class="line">            list.add(Math.random());</span><br><span class="line">        &#125;</span><br><span class="line">        Log.info(<span class="string">&quot;Debug Point 2&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Log.info(<span class="string">&quot;Debug Point 1&quot;</span>);</span><br><span class="line">        <span class="keyword">new</span> StaticTest().populateList();</span><br><span class="line">        Log.info(<span class="string">&quot;Debug Point 3&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当执行完populateList方法之后，对堆内存并没有被垃圾回收器进行回收。</p>
+<p>因此，我们要十分留意static的变量，如果集合或大量的对象定义为static的，它们会停留在整个应用程序的生命周期当中。而它们所占用的内存空间，本可以用于其他地方。</p>
+<p>那么如何优化呢？第一，进来减少静态变量；第二，如果使用单例，尽量采用懒加载。</p>
+<h4 id="未关闭的资源"><a href="#未关闭的资源" class="headerlink" title="未关闭的资源"></a>未关闭的资源</h4><p>无论什么时候当我们创建一个连接或打开一个流，JVM都会分配内存给这些资源。比如，数据库链接、输入流和session对象。</p>
+<p>忘记关闭这些资源，会阻塞内存，从而导致GC无法进行清理。特别是当程序发生异常时，没有在finally中进行资源关闭的情况。</p>
+<p>这些未正常关闭的连接，如果不进行处理，轻则影响程序性能，重则导致OutOfMemoryError异常发生。</p>
+<p>如果进行处理呢？第一，始终记得在finally中进行资源的关闭；第二，关闭连接的自身代码不能发生异常；第三，Java7以上版本可使用try-with-resources代码方式进行资源关闭。</p>
+<h4 id="不当的equals方法和hashCode方法实现"><a href="#不当的equals方法和hashCode方法实现" class="headerlink" title="不当的equals方法和hashCode方法实现"></a>不当的equals方法和hashCode方法实现</h4><p>当我们定义一个新的类时，往往需要重写equals方法和hashcode方法。在HashSet和HashMap中的很多操作都用到这两个方法。如果重写不当，就会造成内存泄露问题。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> String name;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在将重复的Person对象插入到Map当中。我们知道Map的key是不能重复的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">givenMap</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Map&lt;Person, Integer&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;<span class="number">100</span>; i++) &#123;</span><br><span class="line">        map.put(<span class="keyword">new</span> Person(<span class="string">&quot;jon&quot;</span>), <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    Assert.assertFalse(map.size() == <span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述代码中将Person对象作为key，存入Map当中。理论上当重复的key存入Map时，会进行对象的覆盖，不会导致内存的增长。</p>
+<p>但由于上述代码的Person类并没有重写equals方法，因此在执行put操作时，Map会认为每次创建的对象都是新的对象，从而导致内存不断的增长。</p>
+<p>当重写equals方法和hashCode方法之后，Map当中便只会存储一个对象了。方法的实现如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> String name;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object o)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (o == <span class="keyword">this</span>) <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        <span class="keyword">if</span> (!(o <span class="keyword">instanceof</span> Person)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        Person person = (Person) o;</span><br><span class="line">        <span class="keyword">return</span> person.name.equals(name);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">hashCode</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> result = <span class="number">17</span>;</span><br><span class="line">        result = <span class="number">31</span> * result + name.hashCode();</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>因此，我们需要注意以下两点：第一，如果创建一个实体类，总是重写equals方法和hashCode方法；第二，不仅要覆盖默认的方法实现，而且还要考虑最优的实现方式；</p>
+<h4 id="外部类引用内部类"><a href="#外部类引用内部类" class="headerlink" title="外部类引用内部类"></a>外部类引用内部类</h4><p>这种情况发生在非静态内部类（匿名类）中，在类初始化时，内部类总是需要外部类的一个实例。</p>
+<p>每个非静态内部类默认都持有外部类的隐式引用。如果在应用程序中使用该内部类的对象，即使外部类使用完毕，也不会对其进行垃圾回收。</p>
+<p>此种情况，之所以发生内存泄露，是因为内部类对象隐含的持有外部类的引用，从而导致外部类成为垃圾对象时却无法被正常回收。使用匿名类的时候也会发生类似的情况。</p>
+<p>如何避免此种情况？如果内部类不需要访问外部类的成员信息，可以考虑将其转换为静态内部类。</p>
+<h4 id="finalize-方法"><a href="#finalize-方法" class="headerlink" title="finalize()方法"></a>finalize()方法</h4><p>使用finalize()方法会存在潜在的内存泄露问题，每当一个类的finalize()方法被重写时，该类的对象就不会被GC立即回收。GC会将它们放入队列进行最终确定，在以后的某个时间点进行回收。</p>
+<p>如果finalize()方法重写的不合理或finalizer队列无法跟上Java垃圾回收器的速度，那么迟早，应用程序会出现OutOfMemoryError异常。</p>
+<h4 id="String的intern方法"><a href="#String的intern方法" class="headerlink" title="String的intern方法"></a>String的intern方法</h4><h4 id="使用ThreadLocal"><a href="#使用ThreadLocal" class="headerlink" title="使用ThreadLocal"></a>使用ThreadLocal</h4><p>ThreadLocalMap使用ThreadLocal的弱引用作为key，如果一个ThreadLocal没有外部强引用来引用它，那么系统GC时，这个ThreadLocal势必会被回收，这样一来，ThreadLocalMap中就会出现key为null的Entry，就没有办法访问这些key为null的Entry的value。</p>
+<p>如果当前线程迟迟不结束的话，这些key为null的Entry的value就会一直存在一条强引用链：Thread Ref -&gt; Thread -&gt; ThreaLocalMap -&gt; Entry -&gt; value永远无法回收，造成内存泄漏。</p>
+<p>如何解决该问题:</p>
+<p>第一，使用ThreadLocal提供的remove方法，可对当前线程中的value值进行移除；</p>
+<p>第二，不要使用ThreadLocal.set(null) 的方式清除value，它实际上并没有清除值，而是查找与当前线程关联的Map并将键值对分别设置为当前线程和null。</p>
+<p>第三，最好将ThreadLocal视为需要在finally块中关闭的资源，以确保即使在发生异常的情况下也始终关闭该资源。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    threadLocal.set(System.nanoTime());</span><br><span class="line">    <span class="comment">//... further processing</span></span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">    threadLocal.remove();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/08/06/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8E%E8%AE%A1%E7%BD%91%E7%9B%B8%E5%85%B3/" rel="prev" title="操作系统与计网相关">
+      <i class="fa fa-chevron-left"></i> 操作系统与计网相关
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#JVM%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E7%9B%B8%E5%85%B3"><span class="nav-number">1.</span> <span class="nav-text">JVM内存模型相关</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8"><span class="nav-number">1.0.1.</span> <span class="nav-text">程序计数器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88"><span class="nav-number">1.0.2.</span> <span class="nav-text">Java虚拟机栈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AC%E5%9C%B0%E6%96%B9%E6%B3%95%E6%A0%88"><span class="nav-number">1.0.3.</span> <span class="nav-text">本地方法栈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java%E5%A0%86"><span class="nav-number">1.0.4.</span> <span class="nav-text">Java堆</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E5%8C%BA"><span class="nav-number">1.0.5.</span> <span class="nav-text">方法区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java%E7%B1%BB%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B"><span class="nav-number">1.0.6.</span> <span class="nav-text">Java类加载过程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B1%BB%E5%8A%A0%E8%BD%BD%E7%9A%84%E6%97%B6%E6%9C%BA"><span class="nav-number">1.0.6.1.</span> <span class="nav-text">类加载的时机</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B1%BB%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B"><span class="nav-number">1.0.6.2.</span> <span class="nav-text">类加载过程</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F"><span class="nav-number">1.0.7.</span> <span class="nav-text">内存泄漏</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89"><span class="nav-number">1.0.7.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9D%99%E6%80%81%E5%B1%9E%E6%80%A7%E5%AF%BC%E8%87%B4%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F"><span class="nav-number">1.0.7.2.</span> <span class="nav-text">静态属性导致内存泄漏</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%AA%E5%85%B3%E9%97%AD%E7%9A%84%E8%B5%84%E6%BA%90"><span class="nav-number">1.0.7.3.</span> <span class="nav-text">未关闭的资源</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8D%E5%BD%93%E7%9A%84equals%E6%96%B9%E6%B3%95%E5%92%8ChashCode%E6%96%B9%E6%B3%95%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.0.7.4.</span> <span class="nav-text">不当的equals方法和hashCode方法实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%96%E9%83%A8%E7%B1%BB%E5%BC%95%E7%94%A8%E5%86%85%E9%83%A8%E7%B1%BB"><span class="nav-number">1.0.7.5.</span> <span class="nav-text">外部类引用内部类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#finalize-%E6%96%B9%E6%B3%95"><span class="nav-number">1.0.7.6.</span> <span class="nav-text">finalize()方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#String%E7%9A%84intern%E6%96%B9%E6%B3%95"><span class="nav-number">1.0.7.7.</span> <span class="nav-text">String的intern方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8ThreadLocal"><span class="nav-number">1.0.7.8.</span> <span class="nav-text">使用ThreadLocal</span></a></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Zyh</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zyh</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Java基础知识面向对象与面向过程面向过程就是分析出解决问题所需要的步骤，   然后用函数把这些步骤一步一步实现，使用时一个个依次调用；面向对象十八构成问题事务分解成各个对象，建立对象的目的不是为完成一个步骤，，而是为了描述整个事物在整个解决问题的步骤的行为。 面向过程优点：性能比面向对象高，因为类调用时需要实例化，开销比较大，比较消耗资源;比如单片机、嵌入式开发、 Linux&#x2F;Unix等一般采用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面经总结">
+<meta property="og:url" content="http://example.com/2021/07/14/%E9%9D%A2%E7%BB%8F%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Java基础知识面向对象与面向过程面向过程就是分析出解决问题所需要的步骤，   然后用函数把这些步骤一步一步实现，使用时一个个依次调用；面向对象十八构成问题事务分解成各个对象，建立对象的目的不是为完成一个步骤，，而是为了描述整个事物在整个解决问题的步骤的行为。 面向过程优点：性能比面向对象高，因为类调用时需要实例化，开销比较大，比较消耗资源;比如单片机、嵌入式开发、 Linux&#x2F;Unix等一般采用">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img2020.cnblogs.com/blog/2110160/202008/2110160-20200825212627267-1119709261.png">
+<meta property="og:image" content="https://img2020.cnblogs.com/blog/2110160/202008/2110160-20200825212850258-1238532905.png">
+<meta property="og:image" content="https://images2015.cnblogs.com/blog/1064302/201612/1064302-20161230090438195-1243745647.png">
+<meta property="og:image" content="http://example.com/.com//hexo/hexodemo/pic/浅拷贝.png">
+<meta property="og:image" content="http://example.com/.com//hexo/hexodemo/pic/深克隆.png">
+<meta property="og:image" content="https://img-blog.csdn.net/20170210213355178?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvZmVpbmlr/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://example.com/.com//hexo/hexodemo/pic/20170210213443522.png">
+<meta property="og:image" content="https://img2018.cnblogs.com/blog/885859/201907/885859-20190724173147088-630413355.png">
+<meta property="og:image" content="https://img-blog.csdn.net/20170417103005064?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMjgxMzIwMQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
+<meta property="og:image" content="https://img-blog.csdn.net/20170417102928111?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMjgxMzIwMQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
+<meta property="article:published_time" content="2021-07-14T14:13:03.987Z">
+<meta property="article:modified_time" content="2021-08-14T13:30:44.308Z">
+<meta property="article:author" content="Zyh">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img2020.cnblogs.com/blog/2110160/202008/2110160-20200825212627267-1119709261.png">
+
+<link rel="canonical" href="http://example.com/2021/07/14/%E9%9D%A2%E7%BB%8F%E6%80%BB%E7%BB%93/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>面经总结 | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hexo</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/14/%E9%9D%A2%E7%BB%8F%E6%80%BB%E7%BB%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Zyh">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          面经总结
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-07-14 22:13:03" itemprop="dateCreated datePublished" datetime="2021-07-14T22:13:03+08:00">2021-07-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-08-14 21:30:44" itemprop="dateModified" datetime="2021-08-14T21:30:44+08:00">2021-08-14</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Java"><a href="#Java" class="headerlink" title="Java"></a>Java</h1><h2 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h2><h3 id="面向对象与面向过程"><a href="#面向对象与面向过程" class="headerlink" title="面向对象与面向过程"></a>面向对象与面向过程</h3><p>面向过程就是分析出解决问题所需要的步骤，   然后用函数把这些步骤一步一步实现，使用时一个个依次调用；面向对象十八构成问题事务分解成各个对象，建立对象的目的不是为完成一个步骤，，而是为了描述整个事物在整个解决问题的步骤的行为。</p>
+<h5 id="面向过程"><a href="#面向过程" class="headerlink" title="面向过程"></a>面向过程</h5><p>优点：性能比面向对象高，因为类调用时需要实例化，开销比较大，比较消耗资源;比如单片机、嵌入式开发、 Linux/Unix等一般采用面向过程开发，性能是最重要的因素。<br>缺点：没有面向对象易维护、易复用、易扩展</p>
+<h5 id="面向对象"><a href="#面向对象" class="headerlink" title="面向对象"></a>面向对象</h5><p>优点：易维护，易复用，易拓展，由于面向对象有封装，集成与多态等特性，可以设计出低耦合的系统，使系统更加灵活，更加易于维护。</p>
+<p>缺点：性能比面向过程低。</p>
+<h3 id="final关键字的功能概述"><a href="#final关键字的功能概述" class="headerlink" title="final关键字的功能概述"></a>final关键字的功能概述</h3><p>final关键字可以用来修饰引用，方法和类。</p>
+<h4 id="用来修饰引用"><a href="#用来修饰引用" class="headerlink" title="用来修饰引用"></a>用来修饰引用</h4><ol>
+<li>如果引用为基本数据类型，则该引用为常量，该值无法修改。</li>
+<li>如果引用为引用数据类型，比如对象，数组，则该对象，数组本身可以修改，但指向该对象的数组的地址的引用不能修改。</li>
+<li>如果引用类的成员变量，必须当场赋值，否则会报错</li>
+</ol>
+<h4 id="修饰方法"><a href="#修饰方法" class="headerlink" title="修饰方法"></a>修饰方法</h4><p>当使用final修饰方法时，该方法会成为最终方法，无法被子类重写，但可以被继承。</p>
+<h4 id="修饰类"><a href="#修饰类" class="headerlink" title="修饰类"></a>修饰类</h4><p>当用final修改类时，该类成为最终类，无法被继承。</p>
+<h3 id="static关键字"><a href="#static关键字" class="headerlink" title="static关键字"></a>static关键字</h3><p>在类中，用static声明的成员变量为静态成员变量，也成为类变量。类变量的生命周去和类相同，在整个应用程序执行期间都有效。</p>
+<h4 id="static方法"><a href="#static方法" class="headerlink" title="static方法"></a>static方法</h4><p>　static方法一般称作静态方法，由于静态方法不依赖于任何对象就可以进行访问，因此对于静态方法来说，是没有this的，因为它不依附于任何对象，既然都没有对象，就谈不上this了。并且由于这个特性，在静态方法中不能访问类的非静态成员变量和非静态成员方法，因为非静态成员方法/变量都是必须依赖具体的对象才能够被调用。</p>
+<h4 id="static变量"><a href="#static变量" class="headerlink" title="static变量"></a>static变量</h4><p>static变量也称作静态变量，静态变量和非静态变量的区别是：静态变量被所有的对象所共享，在内存中只有一个副本，它当且仅当在类初次加载时会被初始化。而非静态变量是对象所拥有的，在创建对象的时候被初始化，存在多个副本，各个对象拥有的副本互不影响。</p>
+<p>static成员变量的初始化顺序按照定义的顺序进行初始化。</p>
+<h4 id="static代码块"><a href="#static代码块" class="headerlink" title="static代码块"></a>static代码块</h4><p>　static关键字还有一个比较关键的作用就是 用来形成静态代码块以优化程序性能。static块可以置于类中的任何地方，类中可以有多个static块。在类初次被加载的时候，会按照static块的顺序来执行每个static块，并且只会执行一次</p>
+<h3 id="String、StringBuffer、StringBuilder区别"><a href="#String、StringBuffer、StringBuilder区别" class="headerlink" title="String、StringBuffer、StringBuilder区别"></a>String、StringBuffer、StringBuilder区别</h3><p><strong>1.可变与不可变</strong></p>
+<p>String类中使用字符数组保存字符串，如下就是，因为有“final”修饰符，所以可以知道string对象是不可变的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">char</span> value[];</span><br></pre></td></tr></table></figure>
+
+<p>StringBuilder与StringBuffer都继承自AbstractStringBuilder类，在AbstractStringBuilder中也是使用字符数组保存字符串，如下就是，可知这两种对象都是可变的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">char</span>[] value;</span><br></pre></td></tr></table></figure>
+
+<p><strong>2.是否多线程安全</strong></p>
+<p>　　String中的对象是不可变的，也就可以理解为常量，<strong>显然线程安全</strong>。</p>
+<p>　　AbstractStringBuilder是StringBuilder与StringBuffer的公共父类，定义了一些字符串的基本操作，如expandCapacity、append、insert、indexOf等公共方法。</p>
+<p>　　StringBuffer对方法加了同步锁或者对调用的方法加了同步锁，所以是<strong>线程安全的</strong>。看如下源码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> StringBuffer <span class="title">reverse</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="number">2</span>     <span class="keyword">super</span>.reverse();</span><br><span class="line"><span class="number">3</span>     <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line"><span class="number">4</span> &#125;</span><br><span class="line"><span class="number">5</span> </span><br><span class="line"><span class="number">6</span> <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">indexOf</span><span class="params">(String str)</span> </span>&#123;</span><br><span class="line"><span class="number">7</span>     <span class="keyword">return</span> indexOf(str, <span class="number">0</span>);        </span><br><span class="line">      <span class="comment">//存在 public synchronized int indexOf(String str, int fromIndex) 方法</span></span><br><span class="line"><span class="number">8</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>　　StringBuilder并没有对方法进行加同步锁，所以是<strong>非线程安全的</strong>。</p>
+<p><strong>3.StringBuilder与StringBuffer共同点</strong></p>
+<p>　　StringBuilder与StringBuffer有公共父类AbstractStringBuilder(<strong>抽象类</strong>)。</p>
+<p>　　抽象类与接口的其中一个区别是：抽象类中可以定义一些子类的公共方法，子类只需要增加新的功能，不需要重复写已经存在的方法；而接口中只是对方法的申明和常量的定义。</p>
+<p>　　StringBuilder、StringBuffer的方法都会调用AbstractStringBuilder中的公共方法，如super.append(…)。只是StringBuffer会在方法上加synchronized关键字，进行同步。</p>
+<p>　　<strong>最后，如果程序不是多线程的，那么使用StringBuilder效率高于StringBuffer。</strong></p>
+<h3 id="Java的自动装箱和拆箱"><a href="#Java的自动装箱和拆箱" class="headerlink" title="Java的自动装箱和拆箱"></a>Java的自动装箱和拆箱</h3><p>装箱就是自动将基本数据类型转换为包装类型，拆箱就是自动将包装类转换为基本数据类型。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//自动装箱</span></span><br><span class="line">Integer total = <span class="number">99</span>;</span><br><span class="line"><span class="comment">//自动拆箱 </span></span><br><span class="line"><span class="keyword">int</span> totalprim = total;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//自动装箱</span></span><br><span class="line">    Integer total = <span class="number">99</span>;</span><br><span class="line">    <span class="comment">//自定拆箱</span></span><br><span class="line">    <span class="keyword">int</span> totalprim = total;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Object类的方法"><a href="#Object类的方法" class="headerlink" title="Object类的方法"></a>Object类的方法</h3><p>Object类的常用方法有以下几种：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Equals</span><br><span class="line">Hashcode</span><br><span class="line">toString</span><br><span class="line">wait</span><br><span class="line">notify</span><br><span class="line">clone</span><br><span class="line">getclass</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://img2020.cnblogs.com/blog/2110160/202008/2110160-20200825212627267-1119709261.png" alt="img"></p>
+<p>Object类有12个成员方法，按照用途可以分为以下几种：</p>
+<img src="https://img2020.cnblogs.com/blog/2110160/202008/2110160-20200825212850258-1238532905.png" alt="img">
+
+<h4 id="Clone（）"><a href="#Clone（）" class="headerlink" title="Clone（）"></a>Clone（）</h4><p>clone（）函数的用途是用来另存一个当前存在的对象</p>
+<h4 id="hashCode（）和equals（）"><a href="#hashCode（）和equals（）" class="headerlink" title="hashCode（）和equals（）"></a>hashCode（）和equals（）</h4><ul>
+<li>equals()用于确认两个对象是都相同</li>
+<li>hashcode（）用于获取对象的哈希值</li>
+<li>哈希值相同的对象不一定equals（），equals（）返回true的两个对象一定相同</li>
+</ul>
+<h4 id="wait-和notify-和notifyAll（）"><a href="#wait-和notify-和notifyAll（）" class="headerlink" title="wait()和notify()和notifyAll（）"></a>wait()和notify()和notifyAll（）</h4><p>这几个函数体现的是Java的多线程机制</p>
+<p>在使用的时候要求在synchronize语句中使用</p>
+<p>wait()用于让当前线程失去操作权限，当前线程进入等待序列</p>
+<p>notify()用于随机通知一个持有对象的锁的线程获取操作权限</p>
+<p>notifyAll()用于通知所有持有对象的锁的线程获取操作权限</p>
+<p>wait(long) 和wait(long,int)用于设定下一次获取锁的距离当前释放锁的时间间隔</p>
+<h3 id="Java中抽象类和接口的区别"><a href="#Java中抽象类和接口的区别" class="headerlink" title="Java中抽象类和接口的区别"></a>Java中抽象类和接口的区别</h3><h4 id><a href="#" class="headerlink" title></a><img src="https://images2015.cnblogs.com/blog/1064302/201612/1064302-20161230090438195-1243745647.png" alt="img"></h4><h3 id="深浅拷贝"><a href="#深浅拷贝" class="headerlink" title="深浅拷贝"></a>深浅拷贝</h3><h4 id="引用拷贝"><a href="#引用拷贝" class="headerlink" title="引用拷贝"></a><strong>引用拷贝</strong></h4><p>创建一个指向对象的引用变量的拷贝。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Teacher teacher = <span class="keyword">new</span> Teacher(<span class="string">&quot;Taylor&quot;</span>,<span class="number">26</span>);</span><br><span class="line">Teacher otherteacher = teacher;</span><br><span class="line">System.out.println(teacher);</span><br><span class="line">System.out.println(otherteacher);</span><br></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">blog.Teacher@355da254</span><br><span class="line">blog.Teacher@355da254</span><br></pre></td></tr></table></figure>
+
+<p>从输出结果来看，它们的地址是相同的，那么它们肯定是同一对象。teacher和otherteacher都是引用，它们都指向一个相同的对象Teacher(“Taylor”,26)。这种称为引用拷贝。</p>
+<h4 id="对象拷贝"><a href="#对象拷贝" class="headerlink" title="对象拷贝"></a>对象拷贝</h4><p>创建对象自身的一个副本：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Teacher teacher = <span class="keyword">new</span> Teacher(<span class="string">&quot;Swift&quot;</span>,<span class="number">26</span>);</span><br><span class="line">Teacher otherteacher = (Teacher)teacher.clone();</span><br><span class="line">System.out.println(teacher);</span><br><span class="line">System.out.println(otherteacher);</span><br></pre></td></tr></table></figure>
+
+<p>输出结果:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">blog.Teacher@355da254</span><br><span class="line">blog.Teacher@4dc63996</span><br></pre></td></tr></table></figure>
+
+<p>由输出结果可以看出，它们的地址是不同的，也就是说创建了新的对象， 而不是把原对象的地址赋给了一个新的引用变量,这就叫做对象拷贝。</p>
+<p><strong>深拷贝和浅拷贝都是对象拷贝</strong></p>
+<h4 id="浅拷贝"><a href="#浅拷贝" class="headerlink" title="浅拷贝"></a>浅拷贝</h4><p>被复制对象的所有变量都含有与原来的对象相同的值，而所有的对其他对象的引用仍然指向原来的对象。即对象的浅拷贝会对“主”对象进行拷贝，但不会复制主对象里面的对象。”里面的对象“会在原来的对象和它的副本之间共享。</p>
+<p>简而言之，浅拷贝仅仅复制所考虑的对象，而不复制它所引用的对象。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ShallowCopy</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> CloneNotSupportedException </span>&#123;</span><br><span class="line">        Teacher teacher = <span class="keyword">new</span> Teacher();</span><br><span class="line">        teacher.setName(<span class="string">&quot;Delacey&quot;</span>);</span><br><span class="line">        teacher.setAge(<span class="number">29</span>);</span><br><span class="line"></span><br><span class="line">        Student2 student1 = <span class="keyword">new</span> Student2();</span><br><span class="line">        student1.setName(<span class="string">&quot;Dream&quot;</span>);</span><br><span class="line">        student1.setAge(<span class="number">18</span>);</span><br><span class="line">        student1.setTeacher(teacher);</span><br><span class="line"></span><br><span class="line">        Student2 student2 = (Student2) student1.clone();</span><br><span class="line">        System.out.println(<span class="string">&quot;拷贝后&quot;</span>);</span><br><span class="line">        System.out.println(student2.getName());</span><br><span class="line">        System.out.println(student2.getAge());</span><br><span class="line">        System.out.println(student2.getTeacher().getName());</span><br><span class="line">        System.out.println(student2.getTeacher().getAge());</span><br><span class="line">        System.out.println(<span class="string">&quot;修改老师的信息后-------------&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 修改老师的信息</span></span><br><span class="line">        teacher.setName(<span class="string">&quot;Jam&quot;</span>);</span><br><span class="line">        System.out.println(student1.getTeacher().getName());</span><br><span class="line">        System.out.println(student2.getTeacher().getName());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Studeng2</span> <span class="keyword">implements</span> <span class="title">Cloneable</span></span>&#123;</span><br><span class="line">    <span class="comment">//省略getter和setter</span></span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line">    <span class="keyword">private</span> Teacher teacher;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">clone</span><span class="params">()</span> <span class="keyword">throws</span> CloneNotSupportedException</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        Object object = <span class="keyword">super</span>.clone();</span><br><span class="line">        <span class="keyword">return</span> object;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">拷贝后</span><br><span class="line">Dream</span><br><span class="line"><span class="number">18</span></span><br><span class="line">Delacey</span><br><span class="line"><span class="number">29</span></span><br><span class="line">修改老师的信息后-------------</span><br><span class="line">Jam</span><br><span class="line">Jam</span><br></pre></td></tr></table></figure>
+
+<p><img src="/.com//hexo\hexodemo\pic\浅拷贝.png" alt="浅拷贝"></p>
+<h4 id="深拷贝"><a href="#深拷贝" class="headerlink" title="深拷贝"></a>深拷贝</h4><p>深拷贝是一个整个独立的对象拷贝，深拷贝会拷贝所有的属性,并拷贝属性指向的动态分配的内存。当对象和它所引用的对象一起拷贝时即发生深拷贝。深拷贝相比于浅拷贝速度较慢并且花销较大。</p>
+<p>简而言之，深拷贝把要复制的对象所引用的对象都复制了一遍。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DeepCopy</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        Teacher2 teacher = <span class="keyword">new</span> Teacher2();</span><br><span class="line">        teacher.setName(<span class="string">&quot;Delacey&quot;</span>);</span><br><span class="line">        teacher.setAge(<span class="number">29</span>);</span><br><span class="line"></span><br><span class="line">        Student3 student1 = <span class="keyword">new</span> Student3();</span><br><span class="line">        student1.setName(<span class="string">&quot;Dream&quot;</span>);</span><br><span class="line">        student1.setAge(<span class="number">18</span>);</span><br><span class="line">        student1.setTeacher(teacher);</span><br><span class="line"></span><br><span class="line">        Student3 student2 = (Student3) student1.clone();</span><br><span class="line">        System.out.println(<span class="string">&quot;拷贝后&quot;</span>);</span><br><span class="line">        System.out.println(student2.getName());</span><br><span class="line">        System.out.println(student2.getAge());</span><br><span class="line">        System.out.println(student2.getTeacher().getName());</span><br><span class="line">        System.out.println(student2.getTeacher().getAge());</span><br><span class="line">        System.out.println(<span class="string">&quot;修改老师的信息后-------------&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 修改老师的信息</span></span><br><span class="line">        teacher.setName(<span class="string">&quot;Jam&quot;</span>);</span><br><span class="line">        System.out.println(student1.getTeacher().getName());</span><br><span class="line">        System.out.println(student2.getTeacher().getName());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student3</span> <span class="keyword">implements</span> <span class="title">Cloneable</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line">    <span class="keyword">private</span> Teacher2 teacher;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">clone</span><span class="params">()</span> <span class="keyword">throws</span> CloneNotSupportedException</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// 浅复制时：</span></span><br><span class="line">        <span class="comment">// Object object = super.clone();</span></span><br><span class="line">        <span class="comment">// return object;</span></span><br><span class="line">        <span class="comment">// 改为深复制：</span></span><br><span class="line">        Student3 student = (Student3) <span class="keyword">super</span>.clone();</span><br><span class="line">        <span class="comment">// 本来是浅复制，现在将Teacher对象复制一份并重新set进来</span></span><br><span class="line">        student.setTeacher((Teacher2) student.getTeacher().clone());</span><br><span class="line">        <span class="keyword">return</span> student;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">拷贝后</span><br><span class="line">Dream</span><br><span class="line">18</span><br><span class="line">Delacey</span><br><span class="line">29</span><br><span class="line">修改老师的信息后-------------</span><br><span class="line">Jam</span><br><span class="line">Delacey</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>两个引用student1和student2指向不同的两个对象，两个引用student1和student2中的两个teacher引用指向的是两个对象，但对teacher对象的修改只能影响student1对象,所以说是深拷贝。</p>
+<p><img src="/.com//hexo\hexodemo\pic\深克隆.png" alt="深克隆"></p>
+<h2 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h2><h3 id="List-Map-Set"><a href="#List-Map-Set" class="headerlink" title="List,Map,Set"></a>List,Map,Set</h3><ol>
+<li>List以特定的索引（有顺序的存放）来存放元素，可以有重复的元素。</li>
+<li>Set存放元素是无序的，且不重复。</li>
+<li>Map保存键值对的映射关系，映射关系可以是一对一（键值）或者多对一，键无序且不可重复，值可以重复。</li>
+</ol>
+<h3 id="Arraylist和LinkedList"><a href="#Arraylist和LinkedList" class="headerlink" title="Arraylist和LinkedList"></a>Arraylist和LinkedList</h3><p>Arraylist和LinkedList都实现了List接口。</p>
+<p>Arraylist是基于动态数组实现的，它可以以O(1)时间复杂度对元素进行随机访问。</p>
+<p>LinkedList是基于双向链表的数据结构实现的。</p>
+<p>相对于ArrayList，LinkedList的插入，添加，删除操作速度更快，因为当元素被添加到集合任意位置的时候，不需要像数组那样重新计算大小或者是更新索引。<br>LinkedList比ArrayList更占内存，因为LinkedList为每一个节点存储了两个引用，一个指向前一个元素，一个指向下一个元素。</p>
+<h3 id="HashMap底层数据结构"><a href="#HashMap底层数据结构" class="headerlink" title="HashMap底层数据结构"></a>HashMap底层数据结构</h3><ul>
+<li><strong>JDK1.7及之前：数组+链表</strong></li>
+<li><strong>JDK1.8：数组+链表+红黑树</strong></li>
+</ul>
+<p>当链表长度大于等于8时链表转为红黑树</p>
+<h4 id="解决HashMap冲突的方法"><a href="#解决HashMap冲突的方法" class="headerlink" title="解决HashMap冲突的方法"></a>解决HashMap冲突的方法</h4><h4 id="开放定址发"><a href="#开放定址发" class="headerlink" title="开放定址发"></a>开放定址发</h4><p>开放定址法就是一旦发生了冲突，就去寻找下一个空的散列地址，只要散列表足够大，空的散列地址总能找到，并将记录存入</p>
+<p>公式为：fi(key) = (f(key)+di) MOD m (di=1,2,3,……,m-1) </p>
+<p>比如说，我们的关键字集合为{12,67,56,16,25,37,22,29,15,47,48,34},表长为12。 我们用散列函数f(key) = key mod l2<br>当计算前S个数{12,67,56,16,25}时，都是没有冲突的散列地址，直接存入： </p>
+<p><img src="https://img-blog.csdn.net/20170210213355178?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvZmVpbmlr/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p>计算key = 37时，发现f(37) = 1，此时就与25所在的位置冲突。<br>于是我们应用上面的公式f(37) = (f(37)+1) mod 12 = 2。于是将37存入下标为2的位置：</p>
+<img src="/.com//hexo\hexodemo\pic\20170210213443522.png" alt="20170210213443522" style="zoom:100%;">
+
+<h4 id="再哈希法："><a href="#再哈希法：" class="headerlink" title="再哈希法："></a>再哈希法：</h4><p>再哈希法又叫双哈希法，有多个不同的Hash函数，当发生冲突时，使用第二个，第三个，….，等哈希函数<br>计算地址，直到无冲突。虽然不易发生聚集，但是增加了计算时间。</p>
+<h3 id="为什么HashMap是尾插法"><a href="#为什么HashMap是尾插法" class="headerlink" title="为什么HashMap是尾插法"></a>为什么HashMap是尾插法</h3><p>关于HashMap链表插入问题,<strong>java8之前之前是头插法</strong></p>
+<p>头插法:就是说新来的值会取代原有的值，原有的值就顺推到链表中去，就像上面的例子一样，因为写这个代码的作者认为后来的值被查找的可能性更大一点，提升查找的效率。</p>
+<h3 id="ConcurrentHashMap"><a href="#ConcurrentHashMap" class="headerlink" title="ConcurrentHashMap"></a>ConcurrentHashMap</h3><ul>
+<li>使用数组+链表+红黑树来实现，利用 CAS + synchronized 来保证并发更新的安全</li>
+<li>通过把整个Map分为N个Segment，可以提供相同的线程安全，但是效率提升N倍，默认提升16倍。(读操作不加锁，由于HashEntry的value变量是 volatile的，也能保证读取到最新的值。)</li>
+<li>Hashtable的synchronized是针对整张Hash表的，即每次锁住整张表让线程独占，ConcurrentHashMap允许多个修改操作并发进行，其关键在于使用了锁分离技术</li>
+<li>有些方法需要跨段，比如size()和containsValue()，它们可能需要锁定整个表而而不仅仅是某个段，这需要按顺序锁定所有段，操作完毕后，又按顺序释放所有段的锁</li>
+<li>扩容：段内扩容（段内元素超过该段对应Entry数组长度的75%触发扩容，不会对整个Map进行扩容），插入前检测需不需要扩容，有效避免无效扩容</li>
+</ul>
+<h3 id="Comparable与Comparator区别"><a href="#Comparable与Comparator区别" class="headerlink" title="Comparable与Comparator区别"></a>Comparable与Comparator区别</h3><h4 id="Comparable简介"><a href="#Comparable简介" class="headerlink" title="Comparable简介"></a>Comparable简介</h4><p>Comparable是排序接口。若一个类实现了Comparable接口，就意味着该类支持排序。实现Comparable接口的类的对象的列表或数组可以通过Collections.sort或Arrays.sort进行自动排序。</p>
+<p>​    下面以User类作例子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    String name;</span><br><span class="line">    <span class="keyword">int</span> age;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">User</span><span class="params">(String name, <span class="keyword">int</span> age)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line">　　<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getAge</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> age;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>让Person实现Comparable接口：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> <span class="keyword">implements</span> <span class="title">Comparable</span>&lt;<span class="title">Person</span>&gt;</span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    String name;</span><br><span class="line">    <span class="keyword">int</span> age;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">User</span><span class="params">(String name, <span class="keyword">int</span> age)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getAge</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> age;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compareTo</span><span class="params">(Person p)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.age-p.getAge();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        User[] people=<span class="keyword">new</span> User[]&#123;<span class="keyword">new</span> User(<span class="string">&quot;张三&quot;</span>, <span class="number">20</span>),<span class="keyword">new</span> User(<span class="string">&quot;李四&quot;</span>, <span class="number">10</span>)&#125;;</span><br><span class="line">        Arrays.sort(people);</span><br><span class="line">        System.out.println(<span class="string">&quot;\n排序后&quot;</span>);</span><br><span class="line">        <span class="keyword">for</span> (User person : people)</span><br><span class="line">        &#123;</span><br><span class="line">            System.out.print(person.getName()+<span class="string">&quot;:&quot;</span>+person.getAge());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Comparator简介"><a href="#Comparator简介" class="headerlink" title="Comparator简介"></a>Comparator简介</h4><p>Comparator是比较接口，我们如果需要控制某个类的次序，而该类本身不支持排序(即没有实现Comparable接口)，那么我们就可以建立一个“该类的比较器”来进行排序，这个“比较器”只需要实现Comparator接口即可。也就是说，我们可以通过实现Comparator来新建一个比较器，然后通过这个比较器对类进行排序。该接口定义如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PersonCompartor</span> <span class="keyword">implements</span> <span class="title">Comparator</span>&lt;<span class="title">Person</span>&gt;</span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compare</span><span class="params">(Person o1, Person o2)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> o1.getAge()-o2.getAge();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>利用Comparator接口进行排序:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    User[] people=<span class="keyword">new</span> User[]&#123;<span class="keyword">new</span> User(<span class="string">&quot;张三&quot;</span>, <span class="number">20</span>),<span class="keyword">new</span> User(<span class="string">&quot;李四&quot;</span>, <span class="number">10</span>)&#125;;</span><br><span class="line">    System.out.println(<span class="string">&quot;排序前&quot;</span>);</span><br><span class="line">    Arrays.sort(people, <span class="keyword">new</span> Comparator&lt;User&gt;() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compare</span><span class="params">(User o1, User o2)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> o1.getAge() - o2.getAge();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    System.out.println(<span class="string">&quot;\n排序后&quot;</span>);</span><br><span class="line">    <span class="keyword">for</span> (User person : people)</span><br><span class="line">    &#123;</span><br><span class="line">        System.out.print(person.getName()+<span class="string">&quot;:&quot;</span>+person.getAge());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Comparable和Comparator区别比较"><a href="#Comparable和Comparator区别比较" class="headerlink" title="Comparable和Comparator区别比较"></a>Comparable和Comparator区别比较</h3><p>1.Comparator位于包java.util下，而Comparable位于包java.lang下</p>
+<p>2.Comparable接口将比较代码嵌入自身类中，而Comparator在一个独立的类中实现比较。</p>
+<p>Comparable是排序接口，若一个类实现了Comparable接口，就意味着“该类支持排序”。而Comparator是比较器，我们若需要控制某个类的次序，可以建立一个“该类的比较器”来进行排序。Comparable相当于“内部比较器”，而Comparator相当于“外部比较器”。</p>
+<p>3.Comparator接口的比較方法compare(A,B)有兩個參數，Comparable的比較方法compareTo(A)只有1個參數</p>
+<h2 id="Http报文部分"><a href="#Http报文部分" class="headerlink" title="Http报文部分"></a>Http报文部分</h2><h3 id="HTTP报文机构"><a href="#HTTP报文机构" class="headerlink" title="HTTP报文机构"></a>HTTP报文机构</h3><p>HTTP有两类报文：<strong>请求报文和响应报文</strong>，由于 HTTP 是面向正文的(text-oriented)，因此在报文中的每一个字段都是一些 ASCII码串，因而每个字段的长度都是不确定的。（HTTP2引入了二进制协议）</p>
+<p>这两种报文的结构基本是相同的，都是由四部分组成：请求行（用于区分是请求报文还是响应报文），首部行（一些键值对，用于说明一些信息—），空行，实体主体（请求报文一般不用，响应报文也可能不用）。</p>
+<p><img src="https://img2018.cnblogs.com/blog/885859/201907/885859-20190724173147088-630413355.png" alt="img"></p>
+<h4 id="请求报文"><a href="#请求报文" class="headerlink" title="请求报文"></a>请求报文</h4><p>请求报文的最主要特点是：开始行（请求行)由三个内容组成，即方法，请求资源的URL，HTTP的版本号。</p>
+<p><img src="https://img-blog.csdn.net/20170417103005064?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMjgxMzIwMQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt="img"></p>
+<ol>
+<li><p>请求行：方法，URL 协议的版本(中间由空格隔开)</p>
+<p><strong>请求方法有如下几种</strong>：<br>GET：从服务器获取一份文档<br>HEAD：只从服务器获取文档的首部<br>POST：向服务器发送需要处理的数据，常用于表单提交。<br>PUT：将请求的主体部分存储在服务器上，从服务器上向客户发送文档<br>TRACE：对可能经过代理服务器传送到服务器上去的报文进行追踪<br>OPTIONS：决定可以在服务器上执行哪些方法<br>DELETE：从服务器上删除一份文档<br>COLNNECT： 用于代理服务器</p>
+</li>
+<li><p>首部  首部名：（空格）首部值（回车换行）</p>
+<ul>
+<li><p>User-Agent：产生请求的浏览器类型;标志客户程序</p>
+</li>
+<li><p>Accept：客户端可识别的响应内容类型列表;星号 “ * ” 用于按范围将类型分组，用 “ <em>/</em> ” 指示可接受全部类型，用“ type/* ”指示可接受 type 类型的所有子类型;</p>
+<p>　 ● Accept-Language：客户端可接受的自然语言;</p>
+<p>  　● Accept-Encoding：客户端可接受的编码压缩格式;</p>
+<p>  　● Accept-Charset：可接受的应答的字符集;</p>
+<p>  　● Host：请求的主机名，允许多个域名同处一个IP 地址，即虚拟主机;</p>
+<p>  　● connection：连接方式(close 或 keepalive);</p>
+<p>  　● Cookie：存储于客户端扩展字段，向同一域名的服务端发送属于该域的cookie;</p>
+</li>
+</ul>
+</li>
+<li><p>空行： 通知服务器以下不再有请求的头部信息</p>
+</li>
+<li><p>主体（请求数据）：相关备注信息</p>
+</li>
+</ol>
+<h4 id="响应报文"><a href="#响应报文" class="headerlink" title="响应报文"></a>响应报文</h4><p>相对应的，对于响应报文来说，最主要的特点是：其开始行（也叫状态行）由三部分组成，即<strong>版本、状态码、解释状态码的简单短语</strong></p>
+<p><img src="https://img-blog.csdn.net/20170417102928111?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMjgxMzIwMQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt="img"></p>
+<p> 状态码都是三位数字，分为5大类共33种：</p>
+<ul>
+<li>1xx 表示通知信息的，如请求收到了或正在进行处理。</li>
+<li>2xx 表示成功，如接受或知道了。</li>
+<li>3xx 表示重定向，表示要完成请求还必须采取进一步的行动。</li>
+<li>4xx 表示客户的差错，如请求中有错误的语法或不能完成。</li>
+<li>5xx 表示服务器的差错，如服务器失效无法完成请求。</li>
+</ul>
+<p>常用</p>
+<table>
+<thead>
+<tr>
+<th align="center">状态码</th>
+<th align="center">含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">100</td>
+<td align="center">请求已经接收，客户端可以继续发送请求</td>
+</tr>
+<tr>
+<td align="center">101</td>
+<td align="center">服务器已经收到并且理解了客户端的请求</td>
+</tr>
+<tr>
+<td align="center">200</td>
+<td align="center">一切正常</td>
+</tr>
+<tr>
+<td align="center">204</td>
+<td align="center">请求成功，无资源可返回</td>
+</tr>
+<tr>
+<td align="center">206</td>
+<td align="center">范围请求，请求范围内资源正常返回</td>
+</tr>
+<tr>
+<td align="center">301</td>
+<td align="center">永久重定向</td>
+</tr>
+<tr>
+<td align="center">302</td>
+<td align="center">暂时重定向，URL可能还会改变</td>
+</tr>
+<tr>
+<td align="center">400</td>
+<td align="center">请求存在语法错误</td>
+</tr>
+<tr>
+<td align="center">401</td>
+<td align="center">请求需要有通过HTTP认证的认证信息</td>
+</tr>
+<tr>
+<td align="center">403</td>
+<td align="center">禁止访问</td>
+</tr>
+<tr>
+<td align="center">404</td>
+<td align="center">资源没找到，not found</td>
+</tr>
+<tr>
+<td align="center">500</td>
+<td align="center">服务端处理请求发生了错误，或web应用存在某些bug或临时的故障</td>
+</tr>
+<tr>
+<td align="center">503</td>
+<td align="center">服务器过载或者临时维护</td>
+</tr>
+<tr>
+<td align="center">504</td>
+<td align="center">网关超时，代理服务器等待应用服务器响应时的超时</td>
+</tr>
+</tbody></table>
+<h3 id="http-2与http-1-1的比较"><a href="#http-2与http-1-1的比较" class="headerlink" title="http/2与http/1.1的比较"></a>http/2与http/1.1的比较</h3><ol>
+<li><p>数据上的区别<br>HTTP / 1.1使用文本数据，这通常在网络上效率较低。而HTTP / 2是二进制数据。</p>
+</li>
+<li><p>标头的区别<br>标头是与请求一起发送的信息，它描述了数据，其来源，类型，长度，可以缓存的时间等。<br>HTTP / 1.1的标头没有压缩，而HTTP / 2的标头是压缩的。</p>
+</li>
+<li><p>响应请求的顺序 </p>
+<p>在HTTP / 1.1中，服务器必须以接收请求的相同顺序发送响应。而，HTTP / 2是异步的，它使用流水线，因此可以更快地处理，更快的响应。</p>
+</li>
+<li><p>HTTP / 2是多路复用的<br>在HTTP / 1.1中，任何时候都只能在TCP连接上处理一个请求。浏览器通常在四到八个连接之间打开，但是大型或慢速资产可能导致其他文件的下载延迟。而，HTTP / 2允许同时在同一（单个）连接上发送多个请求和响应消息。</p>
+</li>
+</ol>
+<h3 id="HTTP与HTTPS"><a href="#HTTP与HTTPS" class="headerlink" title="HTTP与HTTPS"></a>HTTP与HTTPS</h3><p>HTTP协议传输的数据都是未加密的，也就是明文，因此使用HTTP协议传输隐私信息非常不安全，为了保障这些隐私数据能够加密传输，于是网景公司设计了SSL（Secure Sockets Layer）协议用于对HTTP协议传输的数据进行加密，从而诞生了HTTPS。简单来说，HTTPS协议是由SSL+HTTP协议构建的可进行加密传输，身份认证的网络协议，要比HTTP安全。</p>
+<p>Http和HTTPs的主要区别如下：</p>
+<ol>
+<li>https协议需要用到ca申请证书，一般免费证书比较少，因而需要一定费用。</li>
+<li>http是超文本传输协议，信息是明文传输，https则是具有安全性的ssl加密传输协议</li>
+<li>http和https使用的是不同的连接方式，用的端口也不同，前者是80，后者是443</li>
+<li>http的连接很简单，是无状态的；Https协议是由SSL+HTTP协议构建的可进行加密传输，身份认证的网络协议，比http协议安全。</li>
+</ol>
+<h3 id="HTTPS的工作原理"><a href="#HTTPS的工作原理" class="headerlink" title="HTTPS的工作原理"></a>HTTPS的工作原理</h3><p>客户端在使用HTTPS方式与Web服务器通信时有以下几个步骤，如图所示。</p>
+<p>　　（1）客户使用https的URL访问Web服务器，要求与Web服务器建立SSL连接。</p>
+<p>　　（2）Web服务器收到客户端请求后，会将网站的证书信息（证书中包含公钥）传送一份给客户端。</p>
+<p>　　（3）客户端的浏览器与Web服务器开始协商SSL连接的安全等级，也就是信息加密的等级。</p>
+<p>　　（4）客户端的浏览器根据双方同意的安全等级，建立会话密钥，然后利用网站的公钥将会话密钥加密，并传送给网站。</p>
+<p>　　（5）Web服务器利用自己的私钥解密出会话密钥。</p>
+<p>　　（6）Web服务器利用会话密钥加密与客户端之间的通信。</p>
+<h3 id="对称加密和非对称加密"><a href="#对称加密和非对称加密" class="headerlink" title="对称加密和非对称加密"></a>对称加密和非对称加密</h3><ul>
+<li>对称加密<ul>
+<li>即加密的密钥和解密的密钥相同,</li>
+</ul>
+</li>
+<li>非对称加密<ul>
+<li>非对称加密将密钥分为公钥和私钥,公钥可以公开,私钥需要保密,客户端公钥加密的数据,服务端可以通过私钥来解密</li>
+</ul>
+</li>
+</ul>
+<h2 id="Cookie和Session"><a href="#Cookie和Session" class="headerlink" title="Cookie和Session"></a>Cookie和Session</h2><h3 id="Cookie"><a href="#Cookie" class="headerlink" title="Cookie"></a>Cookie</h3><h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h4><p>Cookie（复数形态：Cookies），是指某些网站为了辨别用户身份、进行session跟踪而储存在用户本地终端上的数据（通常经过加密）。</p>
+<p>Cookie是由服务端生成的，发送给客户端（通常是浏览器）的。Cookie总是保存在客户端，按在客户端中的存储位置，可分为内存Cookie和硬盘Cookie：</p>
+<p>内存Cookie由浏览器维护，保存在内存中，浏览器关闭后就消失了，其存在时间是短暂的。</p>
+<p>硬盘Cookie保存在硬盘里，有一个过期时间，除非用户手工清理或者到了过期时间，硬盘Cookie不会被删除，其存在时间是长期的。所以，按存在时间，可分为非持久Cookie和持久Cookie。</p>
+<h4 id="工作原理"><a href="#工作原理" class="headerlink" title="工作原理"></a>工作原理</h4><p>1、创建Cookie</p>
+<p>当用户第一次浏览某个使用Cookie的网站时，该网站的服务器就进行如下工作：</p>
+<p>①该用户生成一个唯一的识别码（Cookie id），创建一个Cookie对象；</p>
+<p>②默认情况下它是一个会话级别的cookie，存储在浏览器的内存中，用户退出浏览器之后被删除。如果网站希望浏览器将该Cookie存储在磁盘上，则需要设置最大时效（maxAge），并给出一个以秒为单位的时间（将最大时效设为0则是命令浏览器删除该Cookie）；</p>
+<p>③将Cookie放入到HTTP响应报头，将Cookie插入到一个 Set-Cookie HTTP请求报头中。</p>
+<p>④发送该HTTP响应报文。</p>
+<p>2、设置存储Cookie</p>
+<p>浏览器收到该响应报文之后，根据报文头里的Set-Cookied特殊的指示，生成相应的Cookie，保存在客户端。该Cookie里面记录着用户当前的信息。</p>
+<p>3、发送Cookie</p>
+<p>当用户再次访问该网站时，浏览器首先检查所有存储的Cookies，如果某个存在该网站的Cookie（即该Cookie所声明的作用范围大于等于将要请求的资源），则把该cookie附在请求资源的HTTP请求头上发送给服务器。</p>
+<p>4、读取Cookie</p>
+<p> 服务器接收到用户的HTTP请求报文之后，从报文头获取到该用户的Cookie，从里面找到所需要的东西。</p>
+<h4 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h4><p>Cookie的根本作用就是在客户端存储用户访问网站的一些信息。典型的应用有：</p>
+<p>1、记住密码，下次自动登录。</p>
+<p>2、购物车功能。</p>
+<p>3、记录用户浏览数据，进行商品（广告）推荐。</p>
+<h4 id="缺陷"><a href="#缺陷" class="headerlink" title="缺陷"></a>缺陷</h4><ol>
+<li><p>Cookie会被附加在每个HTTP请求中，所以无形中增加了流量。</p>
+</li>
+<li><p>由于在HTTP请求中的Cookie是明文传递的，所以安全性成问题。（除非用HTTPS）</p>
+</li>
+<li><p>Cookie的大小限制在4KB左右。对于复杂的存储需求来说是不够用的。</p>
+</li>
+</ol>
+<h3 id="Session"><a href="#Session" class="headerlink" title="Session"></a>Session</h3><h4 id="简介-1"><a href="#简介-1" class="headerlink" title="简介"></a>简介</h4><p>Session代表服务器与浏览器的一次会话过程，这个过程是连续的，也可以时断时续的。Session是一种服务器端的机制，Session 对象用来存储特定用户会话所需的信息。</p>
+<p>Session由服务端生成，保存在服务器的内存、缓存、硬盘或数据库中。</p>
+<h4 id="工作原理-1"><a href="#工作原理-1" class="headerlink" title="工作原理"></a>工作原理</h4><p>1、创建Session</p>
+<p>当用户访问到一个服务器，如果服务器启用Session，服务器就要为该用户创建一个SESSION，在创建这个SESSION的时候，服务器首先检查这个用户发来的请求里是否包含了一个SESSION ID，如果包含了一个SESSION ID则说明之前该用户已经登陆过并为此用户创建过SESSION，那服务器就按照这个SESSION ID把这个SESSION在服务器的内存中查找出来（如果查找不到，就有可能为他新创建一个），如果客户端请求里不包含有SESSION ID，则为该客户端创建一个SESSION并生成一个与此SESSION相关的SESSION ID。这个SESSION ID是唯一的、不重复的、不容易找到规律的字符串，这个SESSION ID将被在本次响应中返回到客户端保存，而保存这个SESSION ID的正是COOKIE，这样在交互过程中浏览器可以自动的按照规则把这个标识发送给服务器。 </p>
+<p>2、使用Session</p>
+<p>我们知道在IE中，我们可以在工具的Internet选项中把Cookie禁止，那么会不会出现把客户端的Cookie禁止了，那么SESSIONID就无法再用了呢？找了一些资料说明，可以有其他机制在COOKIE被禁止时仍然能够把Session id传递回服务器。</p>
+<p>经常被使用的一种技术叫做URL重写，就是把Session id直接附加在URL路径的后面一种是作为URL路径的附加信息,表现形式为： </p>
+<p>http://…./xxx;jSession=ByOK3vjFD75aPnrF7C2HmdnV6QZcEbzWoWiBYEnLerjQ99zWpBng!-145788764； </p>
+<p>另一种是作为查询字符串附加在URL后面，表现形式为： </p>
+<p>http://…../xxx?jSession=ByOK3vjFD75aPnrF7C2HmdnV6QZcEbzWoWiBYEnLerjQ99zWpBng!-145788764 </p>
+<p>还有一种就是表单隐藏字段。就是服务器会自动修改表单，添加一个隐藏字段，以便在表单提交时能够把Session id传递回服务器。</p>
+<h4 id="作用-1"><a href="#作用-1" class="headerlink" title="作用"></a>作用</h4><p>Session的根本作用就是在服务端存储用户和服务器会话的一些信息。典型的应用有：</p>
+<p>1、判断用户是否登录。</p>
+<p>2、购物车功能。</p>
+<h3 id="Cookie和Session的不同"><a href="#Cookie和Session的不同" class="headerlink" title="Cookie和Session的不同"></a>Cookie和Session的不同</h3><p>1、存放位置不同</p>
+<p>Cookie保存在客户端，Session保存在服务端。</p>
+<p>2 、存取方式的不同</p>
+<p> Cookie中只能保管ASCII字符串，假如需求存取Unicode字符或者二进制数据，需求先进行编码。Cookie中也不能直接存取Java对象。若要存储略微复杂的信息，运用Cookie是比拟艰难的。 </p>
+<p>而Session中能够存取任何类型的数据，包括而不限于String、Integer、List、Map等。Session中也能够直接保管Java Bean乃至任何Java类，对象等，运用起来十分便当。能够把Session看做是一个Java容器类。 </p>
+<p>3、安全性（隐私策略）的不同 </p>
+<p>Cookie存储在浏览器中，对客户端是可见的，客户端的一些程序可能会窥探、复制以至修正Cookie中的内容。而Session存储在服务器上，对客户端是透明的，不存在敏感信息泄露的风险。 假如选用Cookie，比较好的方法是，敏感的信息如账号密码等尽量不要写到Cookie中。最好是像Google、Baidu那样将Cookie信息加密，提交到服务器后再进行解密，保证Cookie中的信息只要本人能读得懂。而假如选择Session就省事多了，反正是放在服务器上，Session里任何隐私都能够有效的保护。 </p>
+<p>4、有效期上的不同 </p>
+<p>只需要设置Cookie的过期时间属性为一个很大很大的数字，Cookie就可以在浏览器保存很长时间。 由于Session依赖于名为JSESSIONID的Cookie，而Cookie JSESSIONID的过期时间默许为–1，只需关闭了浏览器（一次会话结束），该Session就会失效。</p>
+<p>5、对服务器造成的压力不同 </p>
+<p>Session是保管在服务器端的，每个用户都会产生一个Session。假如并发访问的用户十分多，会产生十分多的Session，耗费大量的内存。而Cookie保管在客户端，不占用服务器资源。假如并发阅读的用户十分多，Cookie是很好的选择。</p>
+<p>6、 跨域支持上的不同 </p>
+<p>Cookie支持跨域名访问，例如将domain属性设置为“.baidu.com”，则以“.baidu.com”为后缀的一切域名均能够访问该Cookie。跨域名Cookie如今被普遍用在网络中。而Session则不会支持跨域名访问。Session仅在他所在的域名内有效。 </p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/06/25/Springboot%E5%9F%BA%E6%9C%AC%E7%9A%84%E6%95%B0%E6%8D%AE%E6%A0%A1%E9%AA%8C%E4%BB%A5%E5%8F%8A%E8%A7%84%E8%8C%83%E6%8E%A5%E5%8F%A3%E5%BD%A2%E5%BC%8F/" rel="prev" title="Springboot基本的数据校验">
+      <i class="fa fa-chevron-left"></i> Springboot基本的数据校验
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/07/25/Java%E4%B8%AD%E7%9A%84RPC/" rel="next" title="">
+       <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Java"><span class="nav-number">1.</span> <span class="nav-text">Java</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="nav-number">1.1.</span> <span class="nav-text">基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E4%B8%8E%E9%9D%A2%E5%90%91%E8%BF%87%E7%A8%8B"><span class="nav-number">1.1.1.</span> <span class="nav-text">面向对象与面向过程</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%9D%A2%E5%90%91%E8%BF%87%E7%A8%8B"><span class="nav-number">1.1.1.0.1.</span> <span class="nav-text">面向过程</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1"><span class="nav-number">1.1.1.0.2.</span> <span class="nav-text">面向对象</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#final%E5%85%B3%E9%94%AE%E5%AD%97%E7%9A%84%E5%8A%9F%E8%83%BD%E6%A6%82%E8%BF%B0"><span class="nav-number">1.1.2.</span> <span class="nav-text">final关键字的功能概述</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%A8%E6%9D%A5%E4%BF%AE%E9%A5%B0%E5%BC%95%E7%94%A8"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">用来修饰引用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%AE%E9%A5%B0%E6%96%B9%E6%B3%95"><span class="nav-number">1.1.2.2.</span> <span class="nav-text">修饰方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%AE%E9%A5%B0%E7%B1%BB"><span class="nav-number">1.1.2.3.</span> <span class="nav-text">修饰类</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#static%E5%85%B3%E9%94%AE%E5%AD%97"><span class="nav-number">1.1.3.</span> <span class="nav-text">static关键字</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#static%E6%96%B9%E6%B3%95"><span class="nav-number">1.1.3.1.</span> <span class="nav-text">static方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#static%E5%8F%98%E9%87%8F"><span class="nav-number">1.1.3.2.</span> <span class="nav-text">static变量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#static%E4%BB%A3%E7%A0%81%E5%9D%97"><span class="nav-number">1.1.3.3.</span> <span class="nav-text">static代码块</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#String%E3%80%81StringBuffer%E3%80%81StringBuilder%E5%8C%BA%E5%88%AB"><span class="nav-number">1.1.4.</span> <span class="nav-text">String、StringBuffer、StringBuilder区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java%E7%9A%84%E8%87%AA%E5%8A%A8%E8%A3%85%E7%AE%B1%E5%92%8C%E6%8B%86%E7%AE%B1"><span class="nav-number">1.1.5.</span> <span class="nav-text">Java的自动装箱和拆箱</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Object%E7%B1%BB%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-number">1.1.6.</span> <span class="nav-text">Object类的方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Clone%EF%BC%88%EF%BC%89"><span class="nav-number">1.1.6.1.</span> <span class="nav-text">Clone（）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#hashCode%EF%BC%88%EF%BC%89%E5%92%8Cequals%EF%BC%88%EF%BC%89"><span class="nav-number">1.1.6.2.</span> <span class="nav-text">hashCode（）和equals（）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#wait-%E5%92%8Cnotify-%E5%92%8CnotifyAll%EF%BC%88%EF%BC%89"><span class="nav-number">1.1.6.3.</span> <span class="nav-text">wait()和notify()和notifyAll（）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java%E4%B8%AD%E6%8A%BD%E8%B1%A1%E7%B1%BB%E5%92%8C%E6%8E%A5%E5%8F%A3%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">1.1.7.</span> <span class="nav-text">Java中抽象类和接口的区别</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link"><span class="nav-number">1.1.7.1.</span> <span class="nav-text"></span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%B1%E6%B5%85%E6%8B%B7%E8%B4%9D"><span class="nav-number">1.1.8.</span> <span class="nav-text">深浅拷贝</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%95%E7%94%A8%E6%8B%B7%E8%B4%9D"><span class="nav-number">1.1.8.1.</span> <span class="nav-text">引用拷贝</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%B9%E8%B1%A1%E6%8B%B7%E8%B4%9D"><span class="nav-number">1.1.8.2.</span> <span class="nav-text">对象拷贝</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B5%85%E6%8B%B7%E8%B4%9D"><span class="nav-number">1.1.8.3.</span> <span class="nav-text">浅拷贝</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B7%B1%E6%8B%B7%E8%B4%9D"><span class="nav-number">1.1.8.4.</span> <span class="nav-text">深拷贝</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9B%86%E5%90%88"><span class="nav-number">1.2.</span> <span class="nav-text">集合</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#List-Map-Set"><span class="nav-number">1.2.1.</span> <span class="nav-text">List,Map,Set</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Arraylist%E5%92%8CLinkedList"><span class="nav-number">1.2.2.</span> <span class="nav-text">Arraylist和LinkedList</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HashMap%E5%BA%95%E5%B1%82%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">1.2.3.</span> <span class="nav-text">HashMap底层数据结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3HashMap%E5%86%B2%E7%AA%81%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-number">1.2.3.1.</span> <span class="nav-text">解决HashMap冲突的方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%80%E6%94%BE%E5%AE%9A%E5%9D%80%E5%8F%91"><span class="nav-number">1.2.3.2.</span> <span class="nav-text">开放定址发</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%86%8D%E5%93%88%E5%B8%8C%E6%B3%95%EF%BC%9A"><span class="nav-number">1.2.3.3.</span> <span class="nav-text">再哈希法：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88HashMap%E6%98%AF%E5%B0%BE%E6%8F%92%E6%B3%95"><span class="nav-number">1.2.4.</span> <span class="nav-text">为什么HashMap是尾插法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ConcurrentHashMap"><span class="nav-number">1.2.5.</span> <span class="nav-text">ConcurrentHashMap</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Comparable%E4%B8%8EComparator%E5%8C%BA%E5%88%AB"><span class="nav-number">1.2.6.</span> <span class="nav-text">Comparable与Comparator区别</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Comparable%E7%AE%80%E4%BB%8B"><span class="nav-number">1.2.6.1.</span> <span class="nav-text">Comparable简介</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Comparator%E7%AE%80%E4%BB%8B"><span class="nav-number">1.2.6.2.</span> <span class="nav-text">Comparator简介</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Comparable%E5%92%8CComparator%E5%8C%BA%E5%88%AB%E6%AF%94%E8%BE%83"><span class="nav-number">1.2.7.</span> <span class="nav-text">Comparable和Comparator区别比较</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Http%E6%8A%A5%E6%96%87%E9%83%A8%E5%88%86"><span class="nav-number">1.3.</span> <span class="nav-text">Http报文部分</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#HTTP%E6%8A%A5%E6%96%87%E6%9C%BA%E6%9E%84"><span class="nav-number">1.3.1.</span> <span class="nav-text">HTTP报文机构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%B7%E6%B1%82%E6%8A%A5%E6%96%87"><span class="nav-number">1.3.1.1.</span> <span class="nav-text">请求报文</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%93%8D%E5%BA%94%E6%8A%A5%E6%96%87"><span class="nav-number">1.3.1.2.</span> <span class="nav-text">响应报文</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#http-2%E4%B8%8Ehttp-1-1%E7%9A%84%E6%AF%94%E8%BE%83"><span class="nav-number">1.3.2.</span> <span class="nav-text">http&#x2F;2与http&#x2F;1.1的比较</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HTTP%E4%B8%8EHTTPS"><span class="nav-number">1.3.3.</span> <span class="nav-text">HTTP与HTTPS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HTTPS%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-number">1.3.4.</span> <span class="nav-text">HTTPS的工作原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E5%92%8C%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86"><span class="nav-number">1.3.5.</span> <span class="nav-text">对称加密和非对称加密</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cookie%E5%92%8CSession"><span class="nav-number">1.4.</span> <span class="nav-text">Cookie和Session</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Cookie"><span class="nav-number">1.4.1.</span> <span class="nav-text">Cookie</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.4.1.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-number">1.4.1.2.</span> <span class="nav-text">工作原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%9C%E7%94%A8"><span class="nav-number">1.4.1.3.</span> <span class="nav-text">作用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%BA%E9%99%B7"><span class="nav-number">1.4.1.4.</span> <span class="nav-text">缺陷</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Session"><span class="nav-number">1.4.2.</span> <span class="nav-text">Session</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B-1"><span class="nav-number">1.4.2.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-1"><span class="nav-number">1.4.2.2.</span> <span class="nav-text">工作原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%9C%E7%94%A8-1"><span class="nav-number">1.4.2.3.</span> <span class="nav-text">作用</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cookie%E5%92%8CSession%E7%9A%84%E4%B8%8D%E5%90%8C"><span class="nav-number">1.4.3.</span> <span class="nav-text">Cookie和Session的不同</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Zyh</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zyh</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
